@@ -1,6 +1,5 @@
 import { Todo } from '../../types/Todo';
 import { TodoItem } from '../TodoItem';
-import { TempTodo } from '../TempTodo';
 
 type Props = {
   filteredTodos: Todo[];
@@ -35,10 +34,10 @@ export const TodoList: React.FC<Props> = ({
       ))}
 
       {isNewTodoAdding && (
-        <TempTodo
+        <TodoItem
           key={loadingTodo!.id}
+          todo={loadingTodo!}
           isNewTodoAdding={isNewTodoAdding}
-          loadingTodo={loadingTodo!}
           todoIdsForRemoving={todoIdsForRemoving}
         />
       )}

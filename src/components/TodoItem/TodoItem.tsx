@@ -7,6 +7,7 @@ import { Todo } from '../../types/Todo';
 type Props = {
   todo: Todo;
   isNewTodoAdding?: boolean;
+  loadingTodo?: Todo;
   todoIdsForRemoving: number[] | null;
   isTodoDeleting?: boolean;
   setTodoIdsForRemoving?: (id: number[] | null) => void;

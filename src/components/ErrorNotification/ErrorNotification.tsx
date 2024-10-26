@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import { Errors } from '../../types/Errors';
+import { useMemo } from 'react';
 
 type Props = {
   currentError: string | null;
@@ -7,6 +8,23 @@ type Props = {
 
 export const ErrorNotification: React.FC<Props> = ({ currentError }) => {
   const { load, title, add, delete: deleteError, update } = Errors;
+
+  const currentErrorType = useMemo(() => {
+    switch (currentError) {
+      case load:
+        return load;
+      case title:
+        return title;
+      case add:
+        return add;
+      case deleteError:
+        return deleteError;
+      case update:
+        return update;
+      default:
+        return null;
+    }
+  }, [currentError]);
 
   return (
     <div
@@ -20,11 +38,7 @@ export const ErrorNotification: React.FC<Props> = ({ currentError }) => {
     >
       <button data-cy="HideErrorButton" type="button" className="delete" />
       {/* show only one message at a time */}
-      {currentError === load && load}
-      {currentError === title && title}
-      {currentError === add && add}
-      {currentError === deleteError && deleteError}
-      {currentError === update && update}
+      {currentErrorType}
     </div>
   );
 };
