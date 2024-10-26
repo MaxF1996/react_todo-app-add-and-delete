@@ -6,19 +6,19 @@ type Props = {
   filteredTodos: Todo[];
   isNewTodoAdding: boolean;
   loadingTodo: Todo | null;
-  todoIdForRemoving: number | null;
+  todoIdsForRemoving: number[] | null;
   isTodoDeleting: boolean;
   setIsTodoDeleting: (isTodoDeleting: boolean) => void;
-  setTodoIdForRemoving: (id: number | null) => void;
+  setTodoIdsForRemoving: (id: number[] | null) => void;
 };
 
 export const TodoList: React.FC<Props> = ({
   filteredTodos,
   isNewTodoAdding,
   loadingTodo,
-  todoIdForRemoving,
+  todoIdsForRemoving,
   isTodoDeleting,
-  setTodoIdForRemoving,
+  setTodoIdsForRemoving,
   setIsTodoDeleting,
 }) => {
   return (
@@ -29,8 +29,8 @@ export const TodoList: React.FC<Props> = ({
           todo={todo}
           isTodoDeleting={isTodoDeleting}
           setIsTodoDeleting={setIsTodoDeleting}
-          todoIdForRemoving={todoIdForRemoving}
-          setTodoIdForRemoving={setTodoIdForRemoving}
+          todoIdsForRemoving={todoIdsForRemoving}
+          setTodoIdsForRemoving={setTodoIdsForRemoving}
         />
       ))}
 
@@ -39,7 +39,7 @@ export const TodoList: React.FC<Props> = ({
           key={loadingTodo!.id}
           isNewTodoAdding={isNewTodoAdding}
           loadingTodo={loadingTodo!}
-          todoIdForRemoving={todoIdForRemoving}
+          todoIdsForRemoving={todoIdsForRemoving}
         />
       )}
     </section>

@@ -4,19 +4,19 @@ import { TodoItem } from '../TodoItem';
 type Props = {
   isNewTodoAdding: boolean;
   loadingTodo: Todo;
-  todoIdForRemoving: number | null;
+  todoIdsForRemoving: number[] | null;
 };
 
 export const TempTodo: React.FC<Props> = ({
   isNewTodoAdding,
   loadingTodo,
-  todoIdForRemoving,
+  todoIdsForRemoving,
 }) => {
   return (
     <TodoItem
       todo={loadingTodo}
       isNewTodoAdding={isNewTodoAdding}
-      todoIdForRemoving={todoIdForRemoving}
+      todoIdsForRemoving={todoIdsForRemoving}
     />
   );
 };

@@ -7,25 +7,27 @@ import { Todo } from '../../types/Todo';
 type Props = {
   todo: Todo;
   isNewTodoAdding?: boolean;
-  todoIdForRemoving: number | null;
+  todoIdsForRemoving: number[] | null;
   isTodoDeleting?: boolean;
-  setTodoIdForRemoving?: (id: number | null) => void;
+  setTodoIdsForRemoving?: (id: number[] | null) => void;
   setIsTodoDeleting?: (isTodoDeleting: boolean) => void;
 };
 
 export const TodoItem: React.FC<Props> = ({
   todo,
   isNewTodoAdding,
-  todoIdForRemoving,
+  todoIdsForRemoving,
   isTodoDeleting,
-  setTodoIdForRemoving,
+  setTodoIdsForRemoving,
   setIsTodoDeleting,
 }) => {
   const { completed, title, id } = todo;
 
   const onDelete = () => {
-    if (setTodoIdForRemoving && setIsTodoDeleting) {
-      setTodoIdForRemoving(id);
+    if (setTodoIdsForRemoving && setIsTodoDeleting) {
+      setTodoIdsForRemoving(
+        todoIdsForRemoving ? [...todoIdsForRemoving!, id] : [id],
+      );
       setIsTodoDeleting(true);
     }
   };
@@ -61,7 +63,8 @@ export const TodoItem: React.FC<Props> = ({
         data-cy="TodoLoader"
         className={classNames('modal overlay', {
           'is-active':
-            isNewTodoAdding || (isTodoDeleting && todoIdForRemoving === id),
+            isNewTodoAdding ||
+            (isTodoDeleting && todoIdsForRemoving?.includes(id)),
         })}
       >
         <div className="modal-background has-background-white-ter" />

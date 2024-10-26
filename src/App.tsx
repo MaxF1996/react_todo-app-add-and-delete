@@ -19,7 +19,7 @@ export const App: React.FC = () => {
   const [isNewTodoAdding, setIsNewTodoAdding] = useState<boolean>(false);
   const [tempTodo, setTempTodo] = useState<Todo | null>(null);
   const [isAdded, setIsAdded] = useState<boolean | null>(false);
-  const [todoIdForRemoving, setTodoIdForRemoving] = useState<number | null>(
+  const [todoIdsForRemoving, setTodoIdsForRemoving] = useState<number[] | null>(
     null,
   );
   const [isTodoDeleting, setIsTodoDeleting] = useState<boolean>(false);
@@ -100,23 +100,41 @@ export const App: React.FC = () => {
     return todos.length - uncompletedCount;
   }, [todos, uncompletedCount]);
 
+  const clearCompleted = () => {
+    setTodoIdsForRemoving(
+      todos.filter(todo => todo.completed).map(todo => todo.id),
+    );
+    setIsTodoDeleting(true);
+  };
+
   useEffect(() => {
-    if (!isTodoDeleting || !todoIdForRemoving) {
+    if (
+      !isTodoDeleting ||
+      !todoIdsForRemoving ||
+      todoIdsForRemoving.length === 0
+    ) {
       return;
     }
 
-    deleteTodo(todoIdForRemoving)
-      .then(() => {
-        setTodos(todos.filter(todo => todo.id !== todoIdForRemoving));
-      })
-      .catch(() => {
-        setCurrentError(Errors.delete);
+    Promise.allSettled(
+      todoIdsForRemoving.map(todoId => deleteTodo(todoId).then(() => todoId)),
+    )
+      .then(results => {
+        const successfulDeletes = results
+          .filter(result => result.status === 'fulfilled')
+          .map(result => result.value);
+
+        setTodos(t => t.filter(todo => !successfulDeletes.includes(todo.id)));
+
+        if (results.some(result => result.status === 'rejected')) {
+          setCurrentError(Errors.delete);
+        }
       })
       .finally(() => {
         setIsTodoDeleting(false);
-        setTodoIdForRemoving(null);
+        setTodoIdsForRemoving([]);
       });
-  }, [isTodoDeleting, todoIdForRemoving]);
+  }, [isTodoDeleting, todoIdsForRemoving]);
 
   if (!USER_ID) {
     return <UserWarning />;
@@ -144,8 +162,8 @@ export const App: React.FC = () => {
           isNewTodoAdding={isNewTodoAdding}
           isTodoDeleting={isTodoDeleting}
           setIsTodoDeleting={setIsTodoDeleting}
-          todoIdForRemoving={todoIdForRemoving}
-          setTodoIdForRemoving={setTodoIdForRemoving}
+          todoIdsForRemoving={todoIdsForRemoving}
+          setTodoIdsForRemoving={setTodoIdsForRemoving}
         />
 
         {/* Hide the footer if there are no todos */}
@@ -155,7 +173,7 @@ export const App: React.FC = () => {
             completedCount={completedCount}
             currentFilter={currentFilter}
             onFilterChange={onFilterChange}
-            setIsTodoDeleting={setIsTodoDeleting}
+            clearCompleted={clearCompleted}
           />
         )}
       </div>

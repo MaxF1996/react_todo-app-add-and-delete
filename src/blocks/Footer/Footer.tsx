@@ -7,7 +7,7 @@ type Props = {
   currentFilter: Filters;
   onFilterChange: (filter: Filters) => void;
   completedCount: number;
-  setIsTodoDeleting: (isTodoDeleting: boolean) => void;
+  clearCompleted: () => void;
 };
 
 export const Footer: React.FC<Props> = ({
@@ -15,7 +15,7 @@ export const Footer: React.FC<Props> = ({
   currentFilter,
   onFilterChange,
   completedCount,
-  setIsTodoDeleting,
+  clearCompleted,
 }) => {
   return (
     <footer className="todoapp__footer" data-cy="Footer">
@@ -29,7 +29,7 @@ export const Footer: React.FC<Props> = ({
       {/* this button should be disabled if there are no completed todos */}
       <ClearCompletedButton
         completedCount={completedCount}
-        setIsTodoDeleting={setIsTodoDeleting}
+        clearCompleted={clearCompleted}
       />
     </footer>
   );
