@@ -11,7 +11,7 @@ type Props = {
   isNewTodoAdding: boolean;
   isAdded: boolean | null;
   currentError: Errors | null;
-  todoIdForRemoving: number | null;
+  isTodoDeleting: boolean;
 };
 
 export const Header: React.FC<Props> = ({
@@ -21,6 +21,7 @@ export const Header: React.FC<Props> = ({
   setCurrentError,
   isNewTodoAdding,
   isAdded,
+  isTodoDeleting,
   currentError,
 }) => {
   return (
@@ -36,6 +37,7 @@ export const Header: React.FC<Props> = ({
         setCurrentError={setCurrentError}
         isNewTodoAdding={isNewTodoAdding}
         isAdded={isAdded}
+        isTodoDeleting={isTodoDeleting}
         currentError={currentError}
       />
     </header>

@@ -63,6 +63,7 @@ export const App: React.FC = () => {
       });
 
     setTitle('');
+    setIsAdded(false);
   }, [title]);
 
   const onFilterChange = (filter: Filters) => {
@@ -94,6 +95,10 @@ export const App: React.FC = () => {
   const uncompletedCount = useMemo(() => {
     return todos.reduce((acc, todo) => (todo.completed ? acc : acc + 1), 0);
   }, [todos]);
+
+  const completedCount = useMemo(() => {
+    return todos.length - uncompletedCount;
+  }, [todos, uncompletedCount]);
 
   useEffect(() => {
     if (!isTodoDeleting || !todoIdForRemoving) {
@@ -130,7 +135,7 @@ export const App: React.FC = () => {
           isNewTodoAdding={isNewTodoAdding}
           isAdded={isAdded}
           currentError={currentError}
-          todoIdForRemoving={todoIdForRemoving}
+          isTodoDeleting={isTodoDeleting}
         />
 
         <TodoList
@@ -147,8 +152,10 @@ export const App: React.FC = () => {
         {todos.length > 0 && (
           <Footer
             uncompletedCount={uncompletedCount}
+            completedCount={completedCount}
             currentFilter={currentFilter}
             onFilterChange={onFilterChange}
+            setIsTodoDeleting={setIsTodoDeleting}
           />
         )}
       </div>

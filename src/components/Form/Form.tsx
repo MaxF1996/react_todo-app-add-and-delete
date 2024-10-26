@@ -7,6 +7,7 @@ type Props = {
   currentError: Errors | null;
   isNewTodoAdding: boolean;
   isAdded: boolean | null;
+  isTodoDeleting: boolean;
 };
 
 export const Form: React.FC<Props> = ({
@@ -14,19 +15,23 @@ export const Form: React.FC<Props> = ({
   setCurrentError,
   isNewTodoAdding,
   isAdded,
+  isTodoDeleting,
   currentError,
 }) => {
   const [currentTitle, setCurrentTitle] = useState<string>('');
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (isAdded) {
-      setCurrentTitle('');
+    if (isAdded || isTodoDeleting) {
+      if (isAdded) {
+        setCurrentTitle('');
+      }
+
       if (inputRef.current) {
         inputRef.current.focus();
       }
     }
-  }, [isAdded]);
+  }, [isAdded, isTodoDeleting]);
 
   useEffect(() => {
     if (currentError === null) {
