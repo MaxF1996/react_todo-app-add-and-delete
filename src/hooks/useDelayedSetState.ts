@@ -1,14 +1,15 @@
-import { useEffect } from 'react';
+import { useEffect, Dispatch } from 'react';
 
 export const useDelayedSetState = <T>(
   state: T | null,
-  setState: React.Dispatch<React.SetStateAction<T | null>>,
+  setState: Dispatch<React.SetStateAction<T | null>>,
+  value: T | null = null,
   delay: number = 3000,
 ): void => {
   return useEffect(() => {
     if (state) {
       setTimeout(() => {
-        setState(null);
+        setState(value);
       }, delay);
     }
   }, [state]);

@@ -6,27 +6,27 @@ type Props = {
   setCurrentError: (error: Errors | null) => void;
   currentError: Errors | null;
   isNewTodoAdding: boolean;
-  isAddedSuccessfully: boolean;
+  isAdded: boolean | null;
 };
 
 export const Form: React.FC<Props> = ({
   setTitle,
   setCurrentError,
   isNewTodoAdding,
-  isAddedSuccessfully,
+  isAdded,
   currentError,
 }) => {
   const [currentTitle, setCurrentTitle] = useState<string>('');
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (isAddedSuccessfully) {
+    if (isAdded) {
       setCurrentTitle('');
       if (inputRef.current) {
         inputRef.current.focus();
       }
     }
-  }, [isAddedSuccessfully]);
+  }, [isAdded]);
 
   useEffect(() => {
     if (currentError === null) {

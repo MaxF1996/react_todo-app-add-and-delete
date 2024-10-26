@@ -9,8 +9,9 @@ type Props = {
   setTitle: (title: string) => void;
   setCurrentError: (error: Errors | null) => void;
   isNewTodoAdding: boolean;
-  isAddedSuccessfully: boolean;
+  isAdded: boolean | null;
   currentError: Errors | null;
+  todoIdForRemoving: number | null;
 };
 
 export const Header: React.FC<Props> = ({
@@ -19,7 +20,7 @@ export const Header: React.FC<Props> = ({
   setTitle,
   setCurrentError,
   isNewTodoAdding,
-  isAddedSuccessfully,
+  isAdded,
   currentError,
 }) => {
   return (
@@ -34,7 +35,7 @@ export const Header: React.FC<Props> = ({
         setTitle={setTitle}
         setCurrentError={setCurrentError}
         isNewTodoAdding={isNewTodoAdding}
-        isAddedSuccessfully={isAddedSuccessfully}
+        isAdded={isAdded}
         currentError={currentError}
       />
     </header>

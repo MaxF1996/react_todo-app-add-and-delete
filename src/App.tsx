@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { UserWarning } from './UserWarning';
-import { getTodos, addTodo, USER_ID } from './api/todos';
+import { getTodos, addTodo, deleteTodo, USER_ID } from './api/todos';
 import { Todo } from './types/Todo';
 import { Filters } from './types/Filters';
 import { Errors } from './types/Errors';
@@ -18,8 +18,11 @@ export const App: React.FC = () => {
   const [title, setTitle] = useState<string>('');
   const [isNewTodoAdding, setIsNewTodoAdding] = useState<boolean>(false);
   const [tempTodo, setTempTodo] = useState<Todo | null>(null);
-  const [isAddedSuccessfully, setIsAddedSuccessfully] =
-    useState<boolean>(false);
+  const [isAdded, setIsAdded] = useState<boolean | null>(false);
+  const [todoIdForRemoving, setTodoIdForRemoving] = useState<number | null>(
+    null,
+  );
+  const [isTodoDeleting, setIsTodoDeleting] = useState<boolean>(false);
 
   useEffect(() => {
     getTodos()
@@ -34,6 +37,7 @@ export const App: React.FC = () => {
   }, [todos]);
 
   useDelayedSetState(currentError, setCurrentError);
+  useDelayedSetState(isAdded, setIsAdded, false, 1000);
 
   useEffect(() => {
     if (!title) {
@@ -48,7 +52,7 @@ export const App: React.FC = () => {
     addTodo(title)
       .then((todo: Todo) => {
         setTodos([...todos, todo]);
-        setIsAddedSuccessfully(true);
+        setIsAdded(true);
       })
       .catch(() => {
         setCurrentError(Errors.add);
@@ -59,7 +63,6 @@ export const App: React.FC = () => {
       });
 
     setTitle('');
-    setIsAddedSuccessfully(false);
   }, [title]);
 
   const onFilterChange = (filter: Filters) => {
@@ -92,6 +95,24 @@ export const App: React.FC = () => {
     return todos.reduce((acc, todo) => (todo.completed ? acc : acc + 1), 0);
   }, [todos]);
 
+  useEffect(() => {
+    if (!isTodoDeleting || !todoIdForRemoving) {
+      return;
+    }
+
+    deleteTodo(todoIdForRemoving)
+      .then(() => {
+        setTodos(todos.filter(todo => todo.id !== todoIdForRemoving));
+      })
+      .catch(() => {
+        setCurrentError(Errors.delete);
+      })
+      .finally(() => {
+        setIsTodoDeleting(false);
+        setTodoIdForRemoving(null);
+      });
+  }, [isTodoDeleting, todoIdForRemoving]);
+
   if (!USER_ID) {
     return <UserWarning />;
   }
@@ -107,14 +128,19 @@ export const App: React.FC = () => {
           setTitle={setTitle}
           setCurrentError={setCurrentError}
           isNewTodoAdding={isNewTodoAdding}
-          isAddedSuccessfully={isAddedSuccessfully}
+          isAdded={isAdded}
           currentError={currentError}
+          todoIdForRemoving={todoIdForRemoving}
         />
 
         <TodoList
           filteredTodos={filteredTodos}
           loadingTodo={tempTodo}
           isNewTodoAdding={isNewTodoAdding}
+          isTodoDeleting={isTodoDeleting}
+          setIsTodoDeleting={setIsTodoDeleting}
+          todoIdForRemoving={todoIdForRemoving}
+          setTodoIdForRemoving={setTodoIdForRemoving}
         />
 
         {/* Hide the footer if there are no todos */}

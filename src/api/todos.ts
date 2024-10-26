@@ -14,3 +14,7 @@ export const addTodo = (title: string) => {
     completed: false,
   });
 };
+
+export const deleteTodo = (id: number) => {
+  return client.delete(`/todos/${id}`);
+};

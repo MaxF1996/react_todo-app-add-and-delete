@@ -7,10 +7,28 @@ import { Todo } from '../../types/Todo';
 type Props = {
   todo: Todo;
   isNewTodoAdding?: boolean;
+  todoIdForRemoving: number | null;
+  isTodoDeleting?: boolean;
+  setTodoIdForRemoving?: (id: number | null) => void;
+  setIsTodoDeleting?: (isTodoDeleting: boolean) => void;
 };
 
-export const TodoItem: React.FC<Props> = ({ todo, isNewTodoAdding }) => {
-  const { completed, title } = todo;
+export const TodoItem: React.FC<Props> = ({
+  todo,
+  isNewTodoAdding,
+  todoIdForRemoving,
+  isTodoDeleting,
+  setTodoIdForRemoving,
+  setIsTodoDeleting,
+}) => {
+  const { completed, title, id } = todo;
+
+  const onDelete = () => {
+    if (setTodoIdForRemoving && setIsTodoDeleting) {
+      setTodoIdForRemoving(id);
+      setIsTodoDeleting(true);
+    }
+  };
 
   return (
     <div
@@ -30,14 +48,20 @@ export const TodoItem: React.FC<Props> = ({ todo, isNewTodoAdding }) => {
         {title}
       </span>
 
-      <button type="button" className="todo__remove" data-cy="TodoDelete">
+      <button
+        type="button"
+        className="todo__remove"
+        data-cy="TodoDelete"
+        onClick={onDelete}
+      >
         ×
       </button>
 
       <div
         data-cy="TodoLoader"
         className={classNames('modal overlay', {
-          'is-active': isNewTodoAdding,
+          'is-active':
+            isNewTodoAdding || (isTodoDeleting && todoIdForRemoving === id),
         })}
       >
         <div className="modal-background has-background-white-ter" />
